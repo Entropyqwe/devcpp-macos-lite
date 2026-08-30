@@ -1,0 +1,5 @@
+*.bin
+.DS_Store
+DevCppMac.app/
+dmg_stage/
+__pycache__/
