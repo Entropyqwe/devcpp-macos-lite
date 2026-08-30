@@ -90,9 +90,9 @@ struct ContentView: View {
             .padding(.horizontal, 8).padding(.top, 6)
 
             HStack(spacing: 4) {
-                toolbarIcon("hammer", "编译 Compile", .command, "b") { build.buildAndRun(run: false) }
-                toolbarIcon("play", "运行 Run", [], "R") { build.buildAndRun(run: true) }
-                toolbarIcon("play.square", "编译并运行", .command, "r") { build.buildAndRun(run: true) }
+                toolbarIcon("hammer", "编译", .command, "b") { build.buildAndRun(run: false) }
+                toolbarIcon("play", "运行", [], "R") { build.buildAndRun(run: true) }
+                toolbarIcon("play.square", "编译运行", .command, "r") { build.buildAndRun(run: true) }
                 ToolbarSeparator()
                 ToolbarButton("stop", "终止") { }
                 Spacer()
@@ -166,23 +166,43 @@ struct ContentView: View {
         .background(Color(nsColor: .controlBackgroundColor))
     }
 
-    // —— 工具栏按钮辅助 ——
-    private func toolbarIcon(_ icon: String, _ tip: String, _ mods: EventModifiers, _ key: Character, action: @escaping () -> Void) -> some View {
+    // —— 工具栏按钮：图标在上，下方一行小字说明 ——
+    private func toolbarIcon(_ icon: String, _ caption: String, _ mods: EventModifiers, _ key: Character, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            Image(systemName: icon).font(.system(size: 14, weight: .regular))
-                .frame(width: 26, height: 22)
+            VStack(spacing: 2) {
+                Image(systemName: icon)
+                    .font(.system(size: 14, weight: .regular))
+                Text(caption)
+                    .font(.system(size: 9))
+                    .lineLimit(1)
+            }
+            .frame(width: 52)
+            .padding(.vertical, 2)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .help(tip)
+        .help(caption)
     }
 
     private func ToolbarSeparator() -> some View {
-        Rectangle().fill(Color.gray.opacity(0.35)).frame(width: 1, height: 18).padding(.horizontal, 3)
+        Rectangle().fill(Color.gray.opacity(0.35)).frame(width: 1, height: 30).padding(.horizontal, 3)
     }
-    private func ToolbarButton(_ icon: String, _ tip: String, action: @escaping () -> Void) -> some View {
+
+    private func ToolbarButton(_ icon: String, _ caption: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            Image(systemName: icon).font(.system(size: 14)).frame(width: 26, height: 22)
-        }.buttonStyle(.plain).help(tip)
+            VStack(spacing: 2) {
+                Image(systemName: icon)
+                    .font(.system(size: 14))
+                Text(caption)
+                    .font(.system(size: 9))
+                    .lineLimit(1)
+            }
+            .frame(width: 52)
+            .padding(.vertical, 2)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .help(caption)
     }
 
     // —— 标准编辑动作（转发给首响应者）——
